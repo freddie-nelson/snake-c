@@ -124,19 +124,25 @@ int main()
       }
       case SDL_KEYDOWN:
       {
+        Piece *head = &snake.array[0];
+
         switch (e.key.keysym.sym)
         {
         case SDLK_UP:
-          snake.array[0].direction = UP;
+          if (head->direction != DOWN)
+            head->direction = UP;
           break;
         case SDLK_DOWN:
-          snake.array[0].direction = DOWN;
+          if (head->direction != UP)
+            head->direction = DOWN;
           break;
         case SDLK_RIGHT:
-          snake.array[0].direction = RIGHT;
+          if (head->direction != LEFT)
+            head->direction = RIGHT;
           break;
         case SDLK_LEFT:
-          snake.array[0].direction = LEFT;
+          if (head->direction != RIGHT)
+            head->direction = LEFT;
           break;
         default:
           break;
@@ -155,7 +161,7 @@ int main()
     struct timeval now_t;
     gettimeofday(&now_t, NULL);
 
-    if ((now_t.tv_sec * 1000000 + now_t.tv_usec) - (lastMove_t.tv_sec * 1000000 + lastMove_t.tv_usec) >= 200 * 1000)
+    if ((now_t.tv_sec * 1000000 + now_t.tv_usec) - (lastMove_t.tv_sec * 1000000 + lastMove_t.tv_usec) >= 150 * 1000)
     {
       snakeMove(&snake, &gameOver);
       if (snake.array[0].x == apple.x && snake.array[0].y == apple.y)
