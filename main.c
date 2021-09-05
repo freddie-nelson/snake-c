@@ -18,14 +18,14 @@ bool isInGrid(uint8_t r, uint8_t c)
   return r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE;
 }
 
-SDL_Texture *numTextures[9];
+SDL_Texture *numTextures[10];
 
 void setupNumbers(SDL_Renderer *renderer)
 {
   SDL_Surface *surface;
   SDL_Color textColor = {255, 255, 255, 0};
 
-  for (uint8_t i = 0; i < 9; i++)
+  for (uint8_t i = 0; i < 10; i++)
   {
     char text[1];
     sprintf(text, "%u", i);
@@ -59,7 +59,7 @@ void drawScore(int score, SDL_Window *window, SDL_Renderer *renderer)
   char scoreStr[size];
   sprintf(scoreStr, "%i", score);
 
-  int width = SCREEN_SIZE / GRID_SIZE / 1.5;
+  int width = SCREEN_SIZE / GRID_SIZE;
   int totalWidth = (int)sizeof(scoreStr) * width;
   int leftMargin = SCREEN_SIZE / 2 - totalWidth / 2;
 
@@ -73,7 +73,7 @@ void drawScore(int score, SDL_Window *window, SDL_Renderer *renderer)
 
     int num = (int)scoreStr[i] - '0';
 
-    if (SDL_RenderCopy(renderer, numTextures[num], NULL, &rect) < 1)
+    if (SDL_RenderCopy(renderer, numTextures[num], NULL, &rect) < 0)
       printf(" RENDERCOPY_ERROR: %s ", SDL_GetError());
   }
 }
@@ -117,10 +117,11 @@ int main()
       // get window surface
       screenSurface = SDL_GetWindowSurface(window);
       renderer = SDL_GetRenderer(window);
-
       quit = false;
     }
   }
+
+  setupNumbers(renderer);
 
   // create starter snake
   initSnake(&snake, GRID_SIZE * GRID_SIZE);
@@ -207,7 +208,7 @@ int main()
 
     drawSnake(&snake, window, renderer);
     drawApple(&apple, window, renderer);
-    drawScore(snake.used - 1, window, renderer);
+    drawScore(snake.used - 3, window, renderer);
 
     SDL_RenderPresent(renderer);
   }
